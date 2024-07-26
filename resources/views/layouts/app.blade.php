@@ -19,7 +19,7 @@
     @stack('styles')
 </head>
 <body class="bg-gray-200 font-sans leading-normal tracking-normal">
-
+    @yield('header')
 
     <main>
         @yield('content')

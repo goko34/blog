@@ -1,79 +1,40 @@
-@extends('layouts.app')
-
-@section('title', 'Home Page')
-
-@section('content')
-
-<body class="bg-gray-200">
-    <div class="container mx-auto mt-5">
-        <div class="flex justify-center">
-            <div class="w-full max-w-md">
-                <div class="mt-4">
-                    @if ($errors->any())
-                        <div class="w-full">
-                            @foreach ($errors->all() as $error)
-                                <div class="bg-red-500 text-white p-3 rounded mb-4">
-                                    <button type="button" class="float-right text-white" onclick="this.parentElement.style.display='none'">
-                                        &times;
-                                    </button>
-                                    {{ $error }}
-                                </div>
-                            @endforeach
-                        </div>
-                    @endif
-
-                    @if (session('error'))
-                        <div class="bg-red-500 text-white p-3 rounded mb-4">
-                            <button type="button" class="float-right text-white" onclick="this.parentElement.style.display='none'">
-                                &times;
-                            </button>
-                            {{ session('error') }}
-                        </div>
-                    @endif
-                    @if (session('success'))
-                        <div class="bg-green-500 text-white p-3 rounded mb-4">
-                            <button type="button" class="float-right text-white" onclick="this.parentElement.style.display='none'">
-                                &times;
-                            </button>
-                            {{ session('success') }}
-                        </div>
-                    @endif
-                </div>
-                <div class="bg-white shadow-md rounded-lg">
-                    <div class="text-center font-bold text-xl py-4">
-                        Register
-                    </div>
-                    <div class="p-6">
-                        <form method="POST" action="{{ route('register.post') }}">
-                            @csrf
-                            <div class="mb-4">
-                                <label class="block text-gray-700">Fullname</label>
-                                <input type="text" class="w-full p-2 border border-gray-300 rounded mt-1" name="name">
-                            </div>
-                            <div class="mb-4">
-                                <label class="block text-gray-700">Email address</label>
-                                <input type="text" class="w-full p-2 border border-gray-300 rounded mt-1" name="email" placeholder="info@gmail.com">
-                            </div>
-                            <div class="mb-4">
-                                <label class="block text-gray-700">Password</label>
-                                <input type="password" class="w-full p-2 border border-gray-300 rounded mt-1" name="password">
-                            </div>
-                            <!-- <div class="mb-4">
-                                <label class="block text-gray-700">Repeat Password</label>
-                                <input type="password" class="w-full p-2 border border-gray-300 rounded mt-1" name="r_password">
-                            </div>  -->
-                            <div class="mb-4">
-                                <label class="block text-gray-700">If you have an account</label>
-                                <a href="{{ route('login') }}" class="text-blue-500">login &rarr;</a>
-                            </div>
-                            <div class="text-center">
-                                <button class="bg-blue-500 text-white px-4 py-2 rounded mt-3" type="submit">Register</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+</head>
+<body>
+    <h1>Register</h1>
+    <form action="{{ route('registerpost') }}" method="POST">
+        @csrf
+        <div>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
         </div>
-    </div>
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <div>
+            <label for="password_confirmation">Confirm Password:</label>
+            <input type="password" id="password_confirmation" name="password_confirmation" required>
+        </div>
+        <button type="submit">Register</button>
+    </form>
+    @if($errors->any())
+        <div>
+            <ul>
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 </body>
-@endsection
+</html>

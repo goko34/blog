@@ -8,16 +8,25 @@ use Illuminate\Support\Facades\Http;
 class FrontPostController extends Controller
 {
     protected $apiBaseUrl = 'http://host.docker.internal:80/api/';
-    
+
+    public function indexview()
+    {
+        return view('home');
+    }
     public function index()
     {
         try {
-            $response = Http::get('http://host.docker.internal:80/api/posts');
+            $response = Http::get($this->apiBaseUrl . 'posts');
+            // $response = Http::get($this->apiBaseUrl . 'category');
+            // $response = Http::get($this->apiBaseUrl . 'tags');
             $data = $response->json();
-            dd($data);
-
-            if ($response->successful() && isset($data['success']) && $data['success'] === 'true') {
-                return view('home', ['posts' => $data]);
+            echo($data);
+            if ($response->successful() && isset($data['status']) && $data['status'] === 'success') {
+                return view('home', [
+                    // 'categories' => $data['categories'],
+                    // 'tags' => $data['tags'],
+                    'posts' => $data['posts']
+                ]);
             }else {
                 return redirect()->route('home')->with('error', 'Giriş yapmadan bu sayfaya erişemezsiniz.');
             }
