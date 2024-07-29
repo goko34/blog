@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 
 class FrontPostController extends Controller
@@ -14,26 +15,32 @@ class FrontPostController extends Controller
         return view('home');
     }
     public function index()
-    {
-        try {
-            $response = Http::get($this->apiBaseUrl . 'posts');
-            // $response = Http::get($this->apiBaseUrl . 'category');
-            // $response = Http::get($this->apiBaseUrl . 'tags');
-            $data = $response->json();
-            echo($data);
-            if ($response->successful() && isset($data['status']) && $data['status'] === 'success') {
-                return view('home', [
-                    // 'categories' => $data['categories'],
-                    // 'tags' => $data['tags'],
-                    'posts' => $data['posts']
-                ]);
-            }else {
-                return redirect()->route('home')->with('error', 'Giriş yapmadan bu sayfaya erişemezsiniz.');
-            }
-        } catch (\Exception $e) {
-            return redirect()->route('home')->with('error', 'Bir hata oluştu: ' . $e->getMessage());
+{
+    try {
+
+        $response = Http::withToken(session('token'))->get($this->apiBaseUrl . 'posts');
+
+        $data = $response->json();
+        dd($data);
+
+
+        Log::info('API Response:', $data);
+
+        if ($response->successful() && $data['original']['status'] === 'success') {
+            return view('post', [
+                'posts' => $data['original']['posts']
+            ]);
+        } else {
+            Log::error('API Response Error:', $data);
+            return redirect()->route('post')->with('error', 'Post Error');
         }
+    } catch (\Exception $e) {
+        Log::error('Exception:', ['message' => $e->getMessage()]);
+        return redirect()->route('post')->with('error', 'Unexpected Error: ' . $e->getMessage());
     }
+}
+
+
 
     public function create()
     {

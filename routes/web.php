@@ -18,7 +18,9 @@ Route::get('/home', [FrontPostController::class, 'indexview'])->name('home');
 // Route::post('/login', [FrontAuthController::class, 'login'])->name('login.post');
 // Route::post('/register', [FrontAuthController::class, 'register'])->name('register.post');
 
-Route::get('/login', [FrontAuthController::class, 'showLoginForm'])->name('login');
+Route::get('/', [FrontAuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [FrontAuthController::class, 'login'])->name('loginpost');
 Route::get('/register', [FrontAuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/register', [FrontAuthController::class, 'register'])->name('registerpost');
+
+Route::get('/posts', [FrontPostController::class, 'index'])->name('post');

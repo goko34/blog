@@ -19,13 +19,12 @@ class FrontAuthController extends Controller
             'password' => $request->input('password'),
         ]);
         $data = $response->json();
-        if (isset($data['token'])) {
-
-            // Token varsa, oturum aç ve yönlendir
-            Session::put('token', $data['token']);
-            return redirect()->route('home'); // Örneğin dashboard rotasına yönlendirme
+        
+        if (isset($data['original']['token'])) {
+            Session::put('token', $data['original']['token']);
+            return redirect()->route('home')->with('success', $data['original']['message']);
         }
-        return back()->withErrors(['email' => 'Giriş bilgileri hatalı.']);
+        return redirect()->back()->with('error', $data['original']['message']);
     }
 
     public function showRegisterForm()
@@ -41,14 +40,11 @@ class FrontAuthController extends Controller
             'password' => $request->input('password'),
             'password_confirmation' => $request->input('password_confirmation'),
         ]);
-
-        if ($response->successful()) {
-            // Kayıt başarılı
-            $data = $response->json();
-            // Kullanıcı oturumu ve yönlendirme işlemlerini burada yapabilirsin
-            return redirect()->route('login'); // Örneğin login rotasına yönlendirme
+        $data = $response->json();
+        if (isset($data['original']['status'])) {
+            return redirect()->route('login')->with('success', $data['original']['message']);
+        }else {
+            return redirect()->back()->with('error', 'Registration Failed');
         }
-
-        return back()->withErrors(['email' => 'Kayıt sırasında bir hata oluştu.']);
     }
 }
